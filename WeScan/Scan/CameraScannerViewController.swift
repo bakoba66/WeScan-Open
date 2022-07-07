@@ -18,17 +18,17 @@ public protocol CameraScannerViewOutputDelegate: AnyObject {
 
 /// A view controller that manages the camera module and auto capture of rectangle shape of document
 /// The `CameraScannerViewController` class is individual camera view include touch for focus, flash control, capture control and auto detect rectangle shape of object.
-public final class CameraScannerViewController: UIViewController {
+open class CameraScannerViewController: UIViewController {
 
     /// The status of auto scan.
-    public var isAutoScanEnabled: Bool = CaptureSession.current.isAutoScanEnabled {
+    open var isAutoScanEnabled: Bool = CaptureSession.current.isAutoScanEnabled {
         didSet {
             CaptureSession.current.isAutoScanEnabled = isAutoScanEnabled
         }
     }
 
     /// The callback to caller view to send back success or fail.
-    public weak var delegate: CameraScannerViewOutputDelegate?
+    open weak var delegate: CameraScannerViewOutputDelegate?
 
     private var captureSessionManager: CaptureSessionManager?
     private let videoPreviewLayer = AVCaptureVideoPreviewLayer()
@@ -42,12 +42,12 @@ public final class CameraScannerViewController: UIViewController {
     /// Whether flash is enabled
     private var flashEnabled = false
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         setupView()
     }
     
-    override public func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         CaptureSession.current.isEditing = false
         quadView.removeQuadrilateral()
@@ -55,13 +55,13 @@ public final class CameraScannerViewController: UIViewController {
         UIApplication.shared.isIdleTimerDisabled = true
     }
     
-    override public func viewDidLayoutSubviews() {
+    override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         videoPreviewLayer.frame = view.layer.bounds
     }
     
-    override public func viewWillDisappear(_ animated: Bool) {
+    override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         UIApplication.shared.isIdleTimerDisabled = false
         captureSessionManager?.stop()
@@ -113,7 +113,7 @@ public final class CameraScannerViewController: UIViewController {
         CaptureSession.current.removeFocusRectangleIfNeeded(focusRectangle, animated: true)
     }
     
-    override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         
         guard  let touch = touches.first else { return }
@@ -136,11 +136,11 @@ public final class CameraScannerViewController: UIViewController {
         }
     }
     
-    public func capture() {
+    open func capture() {
         captureSessionManager?.capturePhoto()
     }
     
-    public func toggleFlash() {
+    open func toggleFlash() {
         let state = CaptureSession.current.toggleFlash()
         switch state {
         case .on:
@@ -152,7 +152,7 @@ public final class CameraScannerViewController: UIViewController {
         }
     }
 
-    public func toggleAutoScan() {
+    open func toggleAutoScan() {
         isAutoScanEnabled.toggle()
     }
 }

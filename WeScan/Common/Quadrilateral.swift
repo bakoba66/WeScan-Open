@@ -49,7 +49,7 @@ public struct Quadrilateral: Transformable {
         return Double(perimeter)
     }
     
-    init(rectangleFeature: CIRectangleFeature) {
+    public init(rectangleFeature: CIRectangleFeature) {
         self.topLeft = rectangleFeature.topLeft
         self.topRight = rectangleFeature.topRight
         self.bottomLeft = rectangleFeature.bottomLeft
@@ -57,14 +57,14 @@ public struct Quadrilateral: Transformable {
     }
 
     @available(iOS 11.0, *)
-    init(rectangleObservation: VNRectangleObservation) {
+    public init(rectangleObservation: VNRectangleObservation) {
         self.topLeft = rectangleObservation.topLeft
         self.topRight = rectangleObservation.topRight
         self.bottomLeft = rectangleObservation.bottomLeft
         self.bottomRight = rectangleObservation.bottomRight
     }
 
-    init(topLeft: CGPoint, topRight: CGPoint, bottomRight: CGPoint, bottomLeft: CGPoint) {
+    public init(topLeft: CGPoint, topRight: CGPoint, bottomRight: CGPoint, bottomLeft: CGPoint) {
         self.topLeft = topLeft
         self.topRight = topRight
         self.bottomRight = bottomRight

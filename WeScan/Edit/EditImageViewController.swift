@@ -17,7 +17,7 @@ public protocol EditImageViewDelegate: AnyObject {
 
 /// A view controller that manages edit image for scanning documents or pick image from photo library
 /// The `EditImageViewController` class is individual for rotate, crop image
-public final class EditImageViewController: UIViewController {
+open class EditImageViewController: UIViewController {
     
     /// The image the quadrilateral was detected on.
     private var image: UIImage
@@ -63,7 +63,7 @@ public final class EditImageViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         
         setupViews()
@@ -72,7 +72,7 @@ public final class EditImageViewController: UIViewController {
         addLongGesture(of: zoomGestureController)
     }
     
-    override public func viewDidLayoutSubviews() {
+    override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         adjustQuadViewConstraints()
         displayQuad()
@@ -110,12 +110,13 @@ public final class EditImageViewController: UIViewController {
         let touchDown = UILongPressGestureRecognizer(target: controller,
                                                      action: #selector(controller.handle(pan:)))
         touchDown.minimumPressDuration = 0
+        touchDown.delegate = self
         view.addGestureRecognizer(touchDown)
     }
     
     // MARK: - Actions
     /// This function allow user can crop image follow quad. the image will send back by delegate function
-    public func cropImage() {
+    open func cropImage() {
         guard let quad = quadView.quad, let ciImage = CIImage(image: image) else {
             return
         }
@@ -141,7 +142,7 @@ public final class EditImageViewController: UIViewController {
     }
     
     /// This function allow user to rotate image by 90 degree each and will reload image on image view.
-    public func rotateImage() {
+    open func rotateImage() {
         let rotationAngle = Measurement<UnitAngle>(value: 90, unit: .degrees)
         reloadImage(withAngle: rotationAngle)
     }
@@ -200,5 +201,14 @@ public final class EditImageViewController: UIViewController {
         let bottomLeft = CGPoint(x: offset, y: image.size.height - offset)
         let quad = Quadrilateral(topLeft: topLeft, topRight: topRight, bottomRight: bottomRight, bottomLeft: bottomLeft)
         return quad
+    }
+}
+
+extension EditImageViewController: UIGestureRecognizerDelegate {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view is UIButton {
+            return false
+        }
+        return true
     }
 }
